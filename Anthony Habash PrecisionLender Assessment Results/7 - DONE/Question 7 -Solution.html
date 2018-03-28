@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+</head>
+<body>
+    
+    
+        <div id="workspace" style="margin:0 auto;">
+
+        </div>
+        
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+            
+             var apiKey = "&api_key=v1L089wZ77BhklsEz4QtcWxolRecN4B3";
+             var queryURL = "https://api.giphy.com/v1/stickers/search?";
+
+             $(document).ready(()=>{
+                Promise.resolve(
+                    $.ajax({
+                        url: queryURL + "q=cat"  + "&limit=1" + apiKey,
+                        method:"GET"
+                    })
+                )
+                .then((results) => 
+                {
+                    console.log(results);
+                    let imageDiv = $("#workspace");
+                    imageDiv.append($("<img>").attr("src",results.data[0].images.fixed_height_still.url).attr("image-state","still"));
+                    return delay(3000).then(()=>
+                                        {
+                                            $("body").css("background-color","red");
+                                        })
+                                         .then(()=>{
+                                                    Promise.resolve($.ajax({
+                                                         url: queryURL + "q=dog"  + "&limit=1" + apiKey,
+                                                         method:"GET"
+                                                     })).then((newResults)=>
+                                                         {
+                                                            console.log(newResults);
+                                                             let imageDiv = $("#workspace");
+                                                             imageDiv.empty();
+                                                             imageDiv.append($("<img>").attr("src",newResults.data[0].images.fixed_height_still.url).attr("image-state","still"));
+                        
+                                                             return delay(5000).then(()=>{
+                                                                 $("body").css("background-color","green");
+                                                             })
+                                                        })
+                                         
+                                         })
+                })
+                .catch((e) => 
+                {
+                    console.log(e);
+             });
+            });
+     
+             const delay = (t, v) => {
+                 return new Promise(function(resolve) { 
+                     setTimeout(resolve.bind(null, v), t)
+                 });
+             }
+     
+         </script>
+</body>
+
+</html>
